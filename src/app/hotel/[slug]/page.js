@@ -19,8 +19,8 @@ export default function HotelSlug() {
   const kebijakanRef = useRef(null);
 
   const searchParams = useSearchParams();
+  const paramsObject = Object.fromEntries(searchParams.entries());
   const hotelData = JSON.parse(decodeURIComponent(searchParams.get("data")));
-  console.log("🚀 ~ HotelSlug ~ hotelData:", hotelData);
 
   const scroll = (ref) => {
     if (ref.current) {
@@ -31,7 +31,7 @@ export default function HotelSlug() {
   return (
     <main className="relative h-screen flex flex-col py-8 px-32">
       {/* Pencarian Bar */}
-      <PencarianBar />
+      <PencarianBar searchParam={paramsObject} />
 
       {/* body */}
       <div className="flex flex-col w-full mt-10 gap-10">

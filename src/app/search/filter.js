@@ -38,7 +38,7 @@ export default function Filter() {
   };
 
   return (
-    <div className="flex flex-col justify-items-start p-5 bg-white rounded-xl shadow-lg gap-4 w-lg">
+    <div className="flex flex-col justify-items-start p-5 bg-white rounded-xl shadow-lg gap-4 w-lg h-fit">
       <p className="text-base text-black font-semibold">Filter Pencarian</p>
 
       {/* Bintang Hotel */}

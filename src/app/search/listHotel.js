@@ -10,15 +10,16 @@ import { PiBarbell } from "react-icons/pi";
 import { GrSpa } from "react-icons/gr";
 import { useRouter } from "next/navigation";
 
-export default function ListHotel({ hotels }) {
+export default function ListHotel({ hotels, paramsObject }) {
   const router = useRouter();
 
   const handleClick = (hotel) => {
-    router.push(
-      `/hotel/${encodeURIComponent(hotel.name)}?data=${encodeURIComponent(
-        JSON.stringify(hotel)
-      )}`
-    );
+    const queryParams = new URLSearchParams({
+      data: JSON.stringify(hotel),
+      ...paramsObject, // Menambahkan semua parameter pencarian ke URL
+    }).toString();
+
+    router.push(`/hotel/${encodeURIComponent(hotel.name)}?${queryParams}`);
   };
 
   const getCheapestRoom = (rooms) => {
@@ -33,7 +34,10 @@ export default function ListHotel({ hotels }) {
       {/* Title */}
       <div className="flex flex-row gap-4 items-center">
         <p className="text-xl font-semibold">Hasil Pencarian</p>
-        <p className="text-xs font-medium">9999 Hotel Ditemukan</p>
+        <p className="text-xs font-medium">
+          {hotels === undefined ? "0" : `${hotels?.data?.data?.length || 0}`}{" "}
+          Hotel Ditemukan
+        </p>
       </div>
 
       {/* List Hotel Item */}
@@ -45,7 +49,7 @@ export default function ListHotel({ hotels }) {
               return (
                 <div
                   key={hotel.id}
-                  className="flex flex-row justify-items-start bg-white rounded-xl shadow-lg w-full h-fit"
+                  className="flex flex-row justify-items-start bg-white rounded-xl shadow-lg w-full h-fit cursor-pointer"
                   onClick={() => handleClick(hotel)}
                 >
                   <div className="relative w-[252px] h-fill">

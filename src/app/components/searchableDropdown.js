@@ -31,7 +31,7 @@ export default function SearchableDropdown({
 
   // Handle selecting an option
   const handleSelect = (option) => {
-    onChange({ target: { name, value: option.id } });
+    onChange({ target: { name, value: option } });
     setSearchTerm(option.name);
     setIsOpen(false);
   };

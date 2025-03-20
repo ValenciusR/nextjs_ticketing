@@ -10,9 +10,8 @@ export default function Home() {
   const [search, setSearch] = useState({
     destinasi: "",
     tanggal: "",
-    tamuKamar: { tamu: 1, kamar: 1 }, // Initialize with default values
+    tamuKamar: { tamu: 2, kamar: 1 }, // Initialize with default values
   });
-  console.log("🚀 ~ Home ~ search:", search);
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -58,7 +57,9 @@ export default function Home() {
 
     // Create search parameters string
     const params = new URLSearchParams();
-    params.set("destinasi", search.destinasi);
+    params.set("destinasi", search.destinasi.id);
+    params.set("destinasi_name", search.destinasi.name);
+    params.set("destinasi_country", search.destinasi.country);
     params.set("tanggal", search.tanggal);
     params.set("tamu", search.tamuKamar.tamu);
     params.set("kamar", search.tamuKamar.kamar);
@@ -102,7 +103,6 @@ export default function Home() {
                 placeholder="Pilih nama hotel/destinasi/kota menginap"
                 options={cities}
                 loading={loading}
-                error={error}
               />
             </div>
 
@@ -120,7 +120,7 @@ export default function Home() {
                     [e.target.name]: e.target.value,
                   }))
                 }
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl text-xs text-black focus:outline-none focus:border-blue-500"
+                className="cursor-pointer w-full px-4 py-3 border border-gray-300 rounded-xl text-xs text-black focus:outline-none focus:border-blue-500"
               />
             </div>
 
@@ -144,7 +144,7 @@ export default function Home() {
           {/* Button Search */}
           <button
             onClick={handleSearch}
-            className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium py-[15px] px-[25px] h-[44px] rounded-2xl transition whitespace-nowrap"
+            className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium py-[15px] px-[25px] h-[44px] rounded-2xl transition whitespace-nowrap"
           >
             Cari Hotel
           </button>

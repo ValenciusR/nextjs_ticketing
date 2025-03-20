@@ -63,7 +63,7 @@ export default function TamuKamarInput({ value, onChange }) {
           <div className="flex-1 flex items-center">
             <input
               type="number"
-              min="1"
+              min="2"
               value={localValue.tamu}
               onChange={(e) => handleInputChange("tamu", e)}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl text-xs text-black focus:outline-none focus:border-blue-500"
