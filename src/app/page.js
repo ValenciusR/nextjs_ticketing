@@ -1,103 +1,162 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter from next/navigation
+import SearchableDropdown from "./components/searchableDropdown"; // Adjust path as needed
+import TamuKamarInput from "./components/tamuKamarInput"; // Adjust path as needed
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const router = useRouter(); // Initialize router
+  const [search, setSearch] = useState({
+    destinasi: "",
+    tanggal: "",
+    tamuKamar: { tamu: 1, kamar: 1 }, // Initialize with default values
+  });
+  console.log("🚀 ~ Home ~ search:", search);
+  const [cities, setCities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  useEffect(() => {
+    // Fetch cities data when component mounts
+    const fetchCities = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/cities");
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setCities(data.data || []);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching cities:", err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchCities();
+  }, []);
+
+  // Handle search button click
+  const handleSearch = () => {
+    // Validate search parameters if needed
+    if (!search.destinasi) {
+      setError("Silakan pilih destinasi terlebih dahulu");
+      return;
+    }
+    if (!search.tanggal) {
+      setError("Silakan pilih tanggal menginap");
+      return;
+    }
+
+    // Clear any previous errors
+    setError(null);
+
+    // Create search parameters string
+    const params = new URLSearchParams();
+    params.set("destinasi", search.destinasi);
+    params.set("tanggal", search.tanggal);
+    params.set("tamu", search.tamuKamar.tamu);
+    params.set("kamar", search.tamuKamar.kamar);
+
+    // Navigate using a string path
+    router.push(`/search?${params.toString()}`);
+  };
+
+  return (
+    <div
+      style={{ backgroundImage: "url('/lobby_background.jpg')" }}
+      className="relative h-screen bg-cover bg-center flex flex-col justify-center items-center px-20 sm:px-32"
+    >
+      <div className="absolute inset-0 bg-black/50"></div>
+
+      <main className="relative flex flex-col items-center gap-6 text-center text-white">
+        {/* Main Text */}
+        <h2 className="text-lg sm:text-4xl font-semibold">
+          Staycation menjadi lebih mudah hanya dengan satu klik dan dapatkan
+          banyak promo menarik!
+        </h2>
+
+        {/* Search Bar */}
+        <div className="flex w-full bg-white p-5 rounded-xl items-end gap-10">
+          {/* Input Grid */}
+          <div className="relative w-full grid grid-cols-3 gap-10">
+            {/* Input destinasi */}
+            <div className="flex flex-col items-start gap-2">
+              <p className="text-black text-xs font-normal">
+                Pilih Kota/Nama Hotel/ Destinasi
+              </p>
+              <SearchableDropdown
+                name="destinasi"
+                value={search.destinasi}
+                onChange={(e) =>
+                  setSearch((prev) => ({
+                    ...prev,
+                    [e.target.name]: e.target.value,
+                  }))
+                }
+                placeholder="Pilih nama hotel/destinasi/kota menginap"
+                options={cities}
+                loading={loading}
+                error={error}
+              />
+            </div>
+
+            {/* Input Tanggal */}
+            <div className="flex flex-col items-start gap-2">
+              <p className="text-black text-xs font-normal">Tanggal Menginap</p>
+              <input
+                type="date"
+                name="tanggal"
+                placeholder="Pilih tanggal menginap"
+                value={search.tanggal}
+                onChange={(e) =>
+                  setSearch((prev) => ({
+                    ...prev,
+                    [e.target.name]: e.target.value,
+                  }))
+                }
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl text-xs text-black focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            {/* Input Tamu dan Kamar with inline inputs */}
+            <div className="flex flex-col items-start gap-2">
+              <p className="text-black text-xs font-normal">
+                Jumlah Tamu dan Kamar
+              </p>
+              <TamuKamarInput
+                value={search.tamuKamar}
+                onChange={(e) =>
+                  setSearch((prev) => ({
+                    ...prev,
+                    tamuKamar: e.target.value, // Update based on your TamuKamarInput component
+                  }))
+                }
+              />
+            </div>
+          </div>
+
+          {/* Button Search */}
+          <button
+            onClick={handleSearch}
+            className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium py-[15px] px-[25px] h-[44px] rounded-2xl transition whitespace-nowrap"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            Cari Hotel
+          </button>
         </div>
+
+        {/* Error message */}
+        {error && (
+          <div className="mt-4 text-red-500 bg-red-100 p-2 rounded-lg">
+            {error}
+          </div>
+        )}
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
