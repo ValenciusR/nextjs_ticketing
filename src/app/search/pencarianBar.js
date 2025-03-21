@@ -6,7 +6,7 @@ import TamuKamarInput from "../components/tamuKamarInput";
 import { useRouter } from "next/navigation";
 
 export default function PencarianBar({ searchParam }) {
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
   const cityId = searchParam.destinasi;
   const name = searchParam.destinasi_name;
   const country = searchParam.destinasi_name;
@@ -20,25 +20,21 @@ export default function PencarianBar({ searchParam }) {
     destinasi: {
       id: cityId ? parseInt(cityId, 10) : 0,
       name: name || "",
-      country: country || "", // Sesuaikan jika memang ada country terpisah
+      country: country || "",
     },
-    tanggal: date || "", // Pastikan date tidak undefined/null
+    tanggal: date || "",
     tamuKamar: {
-      tamu: adultGuests || 1, // Default minimal 1 tamu
-      kamar: roomsCount || 1, // Default minimal 1 kamar
+      tamu: adultGuests || 1,
+      kamar: roomsCount || 1,
     },
   });
   console.log("🚀 ~ PencarianBar ~ search:", search);
 
   const handleSearch = () => {
-    // Validate search parameters if needed
     if (!search.tanggal) {
       return;
     }
 
-    // Clear any previous errors
-
-    // Create search parameters string
     const params = new URLSearchParams();
     params.set("destinasi", search.destinasi.id);
     params.set("destinasi_name", search.destinasi.name);
@@ -47,7 +43,6 @@ export default function PencarianBar({ searchParam }) {
     params.set("tamu", search.tamuKamar.tamu);
     params.set("kamar", search.tamuKamar.kamar);
 
-    // Navigate using a string path
     router.push(`/search?${params.toString()}`);
   };
 
@@ -60,7 +55,6 @@ export default function PencarianBar({ searchParam }) {
   };
 
   useEffect(() => {
-    // Fetch cities data when component mounts
     const fetchCities = async () => {
       try {
         setLoading(true);
@@ -152,7 +146,7 @@ export default function PencarianBar({ searchParam }) {
               onChange={(e) =>
                 setSearch((prev) => ({
                   ...prev,
-                  tamuKamar: e.target.value, // Update based on your TamuKamarInput component
+                  tamuKamar: e.target.value,
                 }))
               }
             />
@@ -161,20 +155,6 @@ export default function PencarianBar({ searchParam }) {
               {adultGuests} Tamu {roomsCount} Kamar
             </p>
           )}
-
-          {/* <input
-              type="text"
-              name="destinasi"
-              placeholder="Pilih nama hotel/destinasi/kota menginap"
-              //   value={search.destinasi}
-              //   onChange={(e) =>
-              //     setSearch((prev) => ({
-              //       ...prev,
-              //       [e.target.name]: e.target.value,
-              //     }))
-              //   }
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl text-base text-black focus:outline-none focus:border-blue-500"
-            /> */}
         </div>
 
         {/* Seperator */}

@@ -15,12 +15,10 @@ export default function SearchableDropdown({
   const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef(null);
 
-  // Filter options based on search term
   const filteredOptions = options.filter((option) =>
     option.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -29,14 +27,12 @@ export default function SearchableDropdown({
     }
   }, []);
 
-  // Handle selecting an option
   const handleSelect = (option) => {
     onChange({ target: { name, value: option } });
     setSearchTerm(option.name);
     setIsOpen(false);
   };
 
-  // Handle input change
   const handleInputChange = (e) => {
     setSearchTerm(e.target.value);
     onChange({ target: { name, value: e.target.value } });

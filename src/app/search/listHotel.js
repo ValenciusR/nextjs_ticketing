@@ -16,7 +16,7 @@ export default function ListHotel({ hotels, paramsObject }) {
   const handleClick = (hotel) => {
     const queryParams = new URLSearchParams({
       data: JSON.stringify(hotel),
-      ...paramsObject, // Menambahkan semua parameter pencarian ke URL
+      ...paramsObject,
     }).toString();
 
     router.push(`/hotel/${encodeURIComponent(hotel.name)}?${queryParams}`);

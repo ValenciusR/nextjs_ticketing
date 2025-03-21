@@ -10,7 +10,6 @@ export default function TamuKamarInput({ value, onChange }) {
   });
   const containerRef = useRef(null);
 
-  // Close expanded inputs when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -25,10 +24,8 @@ export default function TamuKamarInput({ value, onChange }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Format display value
   const displayValue = `${localValue.tamu} Tamu, ${localValue.kamar} Kamar`;
 
-  // Handle input changes
   const handleInputChange = (type, e) => {
     const numValue = Math.max(1, parseInt(e.target.value) || 1);
 

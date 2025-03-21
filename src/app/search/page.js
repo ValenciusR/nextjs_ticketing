@@ -30,10 +30,8 @@ export default function SearchSlug() {
   };
 
   useEffect(() => {
-    // Define the async function to fetch hotels
     async function fetchHotels() {
       try {
-        // setLoading(true);
         const response = await fetch(
           `/api/hotels?city_id=${cityId}&date=${date}&rooms_count=${roomsCount}&adult_guests=${adultGuests}&page=${page}`
         );
@@ -46,20 +44,14 @@ export default function SearchSlug() {
         console.log("🚀 ~ fetchHotels ~ data:", data.data.total_pages);
         setHotels(data);
         setTotalPages(data.data.total_pages);
-        // setError(null);
       } catch (err) {
         console.error("Failed to fetch hotels:", err);
-        // setError("Failed to load hotels. Please try again later.");
         setHotels([]);
       } finally {
-        // setLoading(false);
       }
     }
 
-    // Call the function
     fetchHotels();
-
-    // Dependency array - the effect will re-run if any of these values change
   }, [cityId, date, roomsCount, adultGuests, page]);
 
   return (

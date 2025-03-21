@@ -115,7 +115,7 @@ export default function Filter() {
             max={999999999}
             step={1000000}
             valueLabelDisplay="off"
-            sx={{ color: "#007ADE" }} // Ubah warna sesuai kebutuhan
+            sx={{ color: "#007ADE" }}
           />
           <div className="flex justify-between mt-2 text-sm">
             <span>IDR {harga[0].toLocaleString()}</span>

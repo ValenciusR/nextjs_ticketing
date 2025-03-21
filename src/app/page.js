@@ -1,23 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // Import useRouter from next/navigation
-import SearchableDropdown from "./components/searchableDropdown"; // Adjust path as needed
-import TamuKamarInput from "./components/tamuKamarInput"; // Adjust path as needed
+import { useRouter } from "next/navigation";
+import SearchableDropdown from "./components/searchableDropdown";
+import TamuKamarInput from "./components/tamuKamarInput";
 
 export default function Home() {
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
   const [search, setSearch] = useState({
     destinasi: "",
     tanggal: "",
-    tamuKamar: { tamu: 2, kamar: 1 }, // Initialize with default values
+    tamuKamar: { tamu: 2, kamar: 1 },
   });
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch cities data when component mounts
     const fetchCities = async () => {
       try {
         setLoading(true);
@@ -40,9 +39,7 @@ export default function Home() {
     fetchCities();
   }, []);
 
-  // Handle search button click
   const handleSearch = () => {
-    // Validate search parameters if needed
     if (!search.destinasi) {
       setError("Silakan pilih destinasi terlebih dahulu");
       return;
@@ -52,10 +49,8 @@ export default function Home() {
       return;
     }
 
-    // Clear any previous errors
     setError(null);
 
-    // Create search parameters string
     const params = new URLSearchParams();
     params.set("destinasi", search.destinasi.id);
     params.set("destinasi_name", search.destinasi.name);
@@ -64,7 +59,6 @@ export default function Home() {
     params.set("tamu", search.tamuKamar.tamu);
     params.set("kamar", search.tamuKamar.kamar);
 
-    // Navigate using a string path
     router.push(`/search?${params.toString()}`);
   };
 
@@ -134,7 +128,7 @@ export default function Home() {
                 onChange={(e) =>
                   setSearch((prev) => ({
                     ...prev,
-                    tamuKamar: e.target.value, // Update based on your TamuKamarInput component
+                    tamuKamar: e.target.value,
                   }))
                 }
               />
